@@ -12,7 +12,7 @@ class device:
         self.timeOn = [0 for i in range(n)]
 
     def update(self, seconds):
-        [x + seconds for x in self.timeState]
+        self.timeState = [x + seconds for x in self.timeState]
 
         for i in range(len(self.states)):
             # When on, wait until timeOn[i] has passed
@@ -21,31 +21,33 @@ class device:
                     self.timeState[i] = 0
                     self.states[i] = False
             else:
-                double p = random.random()
+                p = random.random()
                 if(p < self.pOn * seconds):
                     self.timeState[i] = 0
                     self.states[i] = True
-                    self.timeOn[i] = random.normalvariate(self.avgTime, self.avgTime / 100.0)
+                    self.timeOn[i] = random.normalvariate(self.avgTime, self.avgTime / 5.0)
 
     def deviceWatts(index):
-        return self.watts * random.normalvariate(1, 0.1) if self.states[index] else 0
+        return max(self.watts * random.normalvariate(1, 0.1), 0) if self.states[index] else 0
 
-    def totalWatts():
+    def totalWatts(self):
         total = 0
         for state in self.states:
-            total += self.watts * random.normalvariate(1, 0.1) if state else 0
+            total += max(self.watts * random.normalvariate(1, 0.1), 0) if state else 0
+
+        return total
 
 class house:
     def __init__(self, devices):
         self.devices = devices
 
     def update(self, seconds):
-        for device in devices:
+        for device in self.devices:
             device.update(seconds)
 
-    def watts():
+    def watts(self):
         total = 0
-        for device in devices:
+        for device in self.devices:
             total += device.totalWatts()
 
         return total

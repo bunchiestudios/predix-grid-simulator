@@ -1,8 +1,8 @@
 ---
 applications:
-- name: hello-python-rdelfin
+- name: grid-simulator-rdelfin
   memory: 128MB
   disk_quota: 256MB
   random-route: true
   buildpack: python_buildpack
-  command: python hello.py
+  command: python main.py
